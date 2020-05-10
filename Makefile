@@ -12,7 +12,6 @@ run:
 	python app.py
 
 dev-run:
-	mysql -h ${DB_HOST} -u ${DB_USER} -p${DB_PASS} &
 	adev runserver
 
 install: install-test
