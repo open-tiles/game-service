@@ -25,32 +25,66 @@ class Territory:
             "name": self.name,
             "tokens": self.tokens,
             "owner": self.owner,
-            "boarders": self.boarders,
+            "boarders": self.boarders.json(),
             "region": self.region,
             }
         return territory
 
-    def set_boardering(self, territory):
-        self.boardering.append(territory)
-        return True
-
-    def dict_to_territory_list(territories):
-        territories = list()
-        for territory in territories:
-            territories.append(
-                    Territory(
-                        territory.get('TID'),
-                        territory.get('Name'),
-                        territory.get('RID'),
-                        territory.get('Tokens'),
-                        territory.get('Owner'),
-                        )
-                    )
-            return territories
+    async def get_boarders(db_conn, territory_id):
+        async with db_conn as conn:
+            cur = await conn.cursor(aiomysql.DictCursor)
+            query = f'''SELECT territories.id, territories.name,
+            territories.tokens, territories.owner
+            FROM territories
+            INNER JOIN boarders ON boarders.territory_from_id = territories.id
+            WHERE boarders.territory_to_id = {territory_id}'''
+            await cur.execute(query)
+            boarders = await cur.fetchall()
+            b = []
+            for territory in boarders:
+                x = Territory(
+                            territory.get('id'),
+                            territory.get('name'),
+                            territory.get('region_id'),
+                            territory.get('tokens'),
+                            territory.get('owner'),
+                            )
+                b.append(x.__dict__)
+                print(x.__dict__)
+            return b
 
     async def get_territories(request):
-        territories = await get_all(request, 'territories')
-        return territories
+        async with request.app['pool'].acquire() as conn:
+            cur = await conn.cursor(aiomysql.DictCursor)
+            try:
+                await cur.execute(f"SELECT * FROM territories")
+                territories = await cur.fetchall()
+            except Exception as e:
+                return {'error': e}
+            t = []
+            for territory in territories:
+                x = Territory(
+                        territory.get('id'),
+                        territory.get('name'),
+                        territory.get('region_id'),
+                        territory.get('tokens'),
+                        territory.get('owner'),
+                        await Territory.get_boarders(
+                            request.app['pool'].acquire(),
+                            territory.get('id')
+                            )
+                    )
+                t.append(x.__dict__)
+            return t
+
+
+class Boarder:
+
+    def __init__(self, boarder_id, territory_id, tokens, owner):
+        self.boarder_id = boarder_id
+        self.territory_id = territory_id
+        self.tokens = tokens
+        self.owner = owner
 
 
 class Region:
@@ -69,32 +103,16 @@ class Region:
         return region
 
     async def get_regions(request):
-        regions = await get_all(request, 'regions')
-        return regions
-
-
-class Boarders:
-
-    def __init__(self, from_id, to_id):
-        self.from_id = from_id
-        self.to_id = to_id
-
-    async def get_boardering_territories(self, request, territory_id):
         async with request.app['pool'].acquire() as conn:
             cur = await conn.cursor(aiomysql.DictCursor)
-            query = f'''SELECT territories.id, territories.name,
-            territories.tokens, territories.owner
-            FROM territories
-            INNER JOIN boarders ON boarders.territory_from_id = territories.id
-            WHERE boarders.territory_from_id = {territory_id}'''
-            await cur.execute(query)
-            territories = await cur.fetchall()
-            return territories
+            await cur.execute(f"SELECT * FROM regions")
+            regions = await cur.fetchall()
+            rs = []
+            for region in regions:
+                rs.append(Region(
+                        region.get('id'),
+                        region.get('name'),
+                        'temp_value'
+                        ))
+        return rs
 
-
-async def get_all(request, table):
-    async with request.app['pool'].acquire() as conn:
-        cur = await conn.cursor(aiomysql.DictCursor)
-        await cur.execute(f"SELECT * FROM {table}")
-        territories = await cur.fetchall()
-    return territories
