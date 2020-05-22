@@ -19,25 +19,16 @@ class Territory:
         self.owner = owner
         self.boardering = boardering
 
-    def json(self):
-        territory = {
-            "id": self.territory_id,
-            "name": self.name,
-            "tokens": self.tokens,
-            "owner": self.owner,
-            "boarders": self.boarders.json(),
-            "region": self.region,
-            }
-        return territory
-
     async def get_boarders(db_conn, territory_id):
         async with db_conn as conn:
             cur = await conn.cursor(aiomysql.DictCursor)
-            query = f'''SELECT territories.id, territories.name,
+            query = f'''
+            SELECT territories.id, territories.name,
             territories.tokens, territories.owner
             FROM territories
-            INNER JOIN boarders ON boarders.territory_from_id = territories.id
-            WHERE boarders.territory_to_id = {territory_id}'''
+            INNER JOIN boarders ON boarders.territory_to_id = territories.id
+            WHERE boarders.territory_from_id = {territory_id}
+            '''
             await cur.execute(query)
             boarders = await cur.fetchall()
             b = []
@@ -50,7 +41,6 @@ class Territory:
                             territory.get('owner'),
                             )
                 b.append(x.__dict__)
-                print(x.__dict__)
             return b
 
     async def get_territories(request):
@@ -93,14 +83,6 @@ class Region:
         self.region_id = region_id
         self.name = name
         self.ref = ref
-
-    def json(self):
-        region = {
-                "id": self.region_id,
-                "name": self.name,
-                "ref": self.ref
-                }
-        return region
 
     async def get_regions(request):
         async with request.app['pool'].acquire() as conn:
