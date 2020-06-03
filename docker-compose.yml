@@ -34,3 +34,9 @@ services:
             DB_PORT: '3306'
         ports:
             - 5432:8080
+
+    combat-api:
+        container_name: combat-api-risk
+        image: combat-api
+        ports:
+            - 7654:8080
