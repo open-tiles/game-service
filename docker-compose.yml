@@ -1,0 +1,36 @@
+version: "3.8"
+services:
+    risk-db:
+        container_name: risk-db
+        image: mysql:latest
+        environment:
+            MYSQL_ROOT_PASSWORD: 'root'
+            MYSQL_USER: 'admin'
+            MYSQL_PASSWORD: 'admin'
+            MYSQL_DATABASE: 'risk'
+        ports:
+            - 8765:3306
+
+    map-api:
+        container_name: map-api-risk
+        image: map-api
+        environment:
+            DB_HOST: 'risk-db'
+            DB_USER: 'admin'
+            DB_PASS: 'admin'
+            DB_NAME: 'risk'
+            DB_PORT: '3306'
+        ports:
+            - 4321:8080
+
+    player-api:
+        container_name: player-api-risk
+        image: player-api
+        environment:
+            DB_HOST: 'risk-db'
+            DB_USER: 'admin'
+            DB_PASS: 'admin'
+            DB_NAME: 'risk'
+            DB_PORT: '3306'
+        ports:
+            - 5432:8080
