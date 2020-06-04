@@ -2,8 +2,6 @@ import os
 import aiohttp
 import aiomysql
 from aiohttp import web
-from models.map import Territory
-from models.player import Player
 
 
 async def create_db_pool(app):
@@ -57,20 +55,12 @@ async def close_db_conn(app):
     await app['pool'].close()
 
 
-async def get_all(request):
-    territories = await Territory.get_territories(request)
-    request.app['territories'] = territories
-    return web.json_response(territories)
-
-
 app = web.Application()
 
 app.on_startup.append(create_db_pool)
 
 app.add_routes([
-        web.get('/v0/map', get_all),
-        web.post('/v0/attack', Player.attack),
-        web.get('/v0/owned', Player.get_owned),
+        web.post('/v0/attack', attack),
         ])
 
 if __name__ == "__main__":
