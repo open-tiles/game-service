@@ -23,22 +23,22 @@ async def get_players(request):
             print(await resp.text())
 
 
+async def get_territory(territory_id):
+    territory = None
+    async with aiohttp.ClientSession() as session:
+        url = f'http://localhost:5432/v0/get?id={territory_id}'
+        async with session.get(url) as resp:
+            territory = resp
+    return territory
+
+
 async def attack(request):
     params = request.rel_url.query
-
     attacker_id = params['attacker']
-    attacker = None
-    async with aiohttp.ClientSession() as session:
-        url = f'http://localhost:5432/v0/get?id={attacker_id}'
-        async with session.get(url) as resp:
-            attacker = resp
-
     defender_id = params['defender']
-    defender = None
-    async with aiohttp.ClientSession() as session:
-        url = f'http://localhost:5432/v0/get?id={defender_id}'
-        async with session.get(url) as resp:
-            defender = resp
+
+    attacker = get_territory(attacker_id)
+    defender = get_territory(defender_id)
 
     data = {
             'attacker': attacker,
