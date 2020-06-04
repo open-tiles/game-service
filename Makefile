@@ -4,8 +4,11 @@ export DB_USER?=admin
 export DB_NAME?=risk
 export DB_PORT?=8765
 export BOARD_API_URL?=localhost
-export COMBAT_API_URL?=localhost
 export PLAYER_API_URL?=localhost
+export COMBAT_API_URL?=localhost
+export BOARD_API_PORT?=4321
+export PLAYER_API_PORT?=5432
+export COMBAT_API_PORT?=6543
 
 
 up:
