@@ -3,6 +3,9 @@ export DB_PASS?=admin
 export DB_USER?=admin
 export DB_NAME?=risk
 export DB_PORT?=8765
+export BOARD_API_URL?=localhost
+export COMBAT_API_URL?=localhost
+export PLAYER_API_URL?=localhost
 
 
 up:

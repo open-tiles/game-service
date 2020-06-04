@@ -3,6 +3,10 @@ import aiohttp
 import aiomysql
 from aiohttp import web
 
+BOARD_API_URL = os.environ('BOARD_API_URL')
+COMBAT_API_URL = os.environ('COMBAT_API_URL')
+PLAYER_API_URL = os.environ('PLAYER_API_URL')
+
 
 async def create_db_pool(app):
     app['pool'] = await aiomysql.create_pool(
@@ -17,7 +21,7 @@ async def create_db_pool(app):
 async def get_players(request):
     async with aiohttp.ClientSession() as session:
         player_id = 1
-        url = f'http://localhost:5432/v0/player/{player_id}'
+        url = f'http://{PLAYER_API_URL}:5432/v0/player/{player_id}'
         async with session.get(url) as resp:
             print(resp.status)
             print(await resp.text())
@@ -26,7 +30,7 @@ async def get_players(request):
 async def get_territory(territory_id):
     territory = None
     async with aiohttp.ClientSession() as session:
-        url = f'http://localhost:5432/v0/get?id={territory_id}'
+        url = f'http://{BOARD_API_URL}:5432/v0/get?id={territory_id}'
         async with session.get(url) as resp:
             territory = resp
     return territory
@@ -46,7 +50,7 @@ async def attack(request):
             }
 
     async with aiohttp.ClientSession() as session:
-        url = 'http://localhost:7654/v0/basic-combat'
+        url = 'http://{COMBAT_API_URL}:7654/v0/basic-combat'
         async with session.post(url, data=data) as resp:
             print(resp.status)
             print(await resp.text())
