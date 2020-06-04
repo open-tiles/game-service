@@ -11,6 +11,16 @@ First start a virtual environment. For example:
 
 Then install the dependencies with `pip install -r requirements`.
 
+### Docker
+
+Because none of the services images have been uploaded to a cloud hosted
+registry you will need to build the dependency images yourself before being
+able to run this service. Currently they are the:
+
+- player-api
+- board-api
+- combat-api
+
 Run `make up`. You may have to wait until the MySQL instance comes up before
 the other containers will stay alive. To check whether the MySQL database has
 finished coming up, run `docker logs risk-db` and look for text similar to
