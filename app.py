@@ -1,4 +1,5 @@
 import os
+import json
 import aiohttp
 import aiomysql
 from aiohttp import web
@@ -33,10 +34,10 @@ async def get_players(request):
 async def get_territory(territory_id):
     territory = None
     async with aiohttp.ClientSession() as session:
-        url = f'{BOARD_API_URL}:{BOARD_API_PORT}/v0/get?id={territory_id}'
+        url = f'{BOARD_API_URL}:{BOARD_API_PORT}/v0/get-territory?territory_id={territory_id}'
         async with session.get(url) as resp:
-            if resp.status == 404:
-                return 'BROKEN'
+            data = await resp.json()
+            territory = data
     return territory
 
 
@@ -45,20 +46,20 @@ async def attack(request):
     attacker_id = params['attacker']
     defender_id = params['defender']
 
-    attacker = await get_territory(attacker_id)
-    defender = await get_territory(defender_id)
-    print(attacker)
+    attacker = await get_territory(str(attacker_id))
+    defender = await get_territory(str(defender_id))
 
     data = {
-            'attacker': attacker,
-            'defender': defender
+            "attacker": attacker,
+            "defender": defender
             }
+    data = json.dumps(data)
 
     async with aiohttp.ClientSession() as session:
         url = f'{COMBAT_API_URL}:{COMBAT_API_PORT}/v0/basic-combat'
         async with session.post(url, data=data) as resp:
-            result = await resp.text()
-    return web.Response(text=result)
+            data = await resp.json()
+        return web.json_response(data)
 
 
 async def close_db_conn(app):
