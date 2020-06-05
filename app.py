@@ -3,12 +3,12 @@ import aiohttp
 import aiomysql
 from aiohttp import web
 
-BOARD_API_URL = os.environ('BOARD_API_URL')
-COMBAT_API_URL = os.environ('COMBAT_API_URL')
-PLAYER_API_URL = os.environ('PLAYER_API_URL')
-BOARD_API_PORT = os.environ('BOARD_API_PORT')
-COMBAT_API_PORT = os.environ('COMBAT_API_PORT')
-PLAYER_API_PORT = os.environ('PLAYER_API_PORT')
+BOARD_API_URL = os.environ.get('BOARD_API_URL')
+COMBAT_API_URL = os.environ.get('COMBAT_API_URL')
+PLAYER_API_URL = os.environ.get('PLAYER_API_URL')
+BOARD_API_PORT = os.environ.get('BOARD_API_PORT')
+COMBAT_API_PORT = os.environ.get('COMBAT_API_PORT')
+PLAYER_API_PORT = os.environ.get('PLAYER_API_PORT')
 
 
 async def create_db_pool(app):
@@ -35,7 +35,8 @@ async def get_territory(territory_id):
     async with aiohttp.ClientSession() as session:
         url = f'{BOARD_API_URL}:{BOARD_API_PORT}/v0/get?id={territory_id}'
         async with session.get(url) as resp:
-            territory = resp
+            if resp.status == 404:
+                return 'BROKEN'
     return territory
 
 
@@ -44,8 +45,9 @@ async def attack(request):
     attacker_id = params['attacker']
     defender_id = params['defender']
 
-    attacker = get_territory(attacker_id)
-    defender = get_territory(defender_id)
+    attacker = await get_territory(attacker_id)
+    defender = await get_territory(defender_id)
+    print(attacker)
 
     data = {
             'attacker': attacker,
@@ -53,10 +55,10 @@ async def attack(request):
             }
 
     async with aiohttp.ClientSession() as session:
-        url = '{COMBAT_API_URL}:{COMBAT_API_PORT}/v0/basic-combat'
+        url = f'{COMBAT_API_URL}:{COMBAT_API_PORT}/v0/basic-combat'
         async with session.post(url, data=data) as resp:
-            print(resp.status)
-            print(await resp.text())
+            result = await resp.text()
+    return web.Response(text=result)
 
 
 async def close_db_conn(app):
@@ -68,7 +70,7 @@ app = web.Application()
 app.on_startup.append(create_db_pool)
 
 app.add_routes([
-        web.post('/v0/attack', attack),
+        web.get('/v0/attack', attack),
         ])
 
 if __name__ == "__main__":
