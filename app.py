@@ -46,8 +46,8 @@ async def attack(request):
     attacker_id = params['attacker']
     defender_id = params['defender']
 
-    attacker = await get_territory(str(attacker_id))
-    defender = await get_territory(str(defender_id))
+    attacker = await get_territory(attacker_id)
+    defender = await get_territory(defender_id)
 
     data = {
             "attacker": attacker,
