@@ -7,9 +7,6 @@ from aiohttp import web
 BOARD_API_URL = os.environ.get('BOARD_API_URL')
 COMBAT_API_URL = os.environ.get('COMBAT_API_URL')
 PLAYER_API_URL = os.environ.get('PLAYER_API_URL')
-BOARD_API_PORT = os.environ.get('BOARD_API_PORT')
-COMBAT_API_PORT = os.environ.get('COMBAT_API_PORT')
-PLAYER_API_PORT = os.environ.get('PLAYER_API_PORT')
 
 
 async def create_db_pool(app):
@@ -25,7 +22,7 @@ async def create_db_pool(app):
 async def get_players(request):
     async with aiohttp.ClientSession() as session:
         player_id = 1
-        url = f'{PLAYER_API_URL}:{PLAYER_API_PORT}/v0/player/{player_id}'
+        url = f'{PLAYER_API_URL}/v0/player/{player_id}'
         async with session.get(url) as resp:
             print(resp.status)
             print(await resp.text())
@@ -34,7 +31,7 @@ async def get_players(request):
 async def get_territory(territory_id):
     territory = None
     async with aiohttp.ClientSession() as session:
-        url = f'{BOARD_API_URL}:{BOARD_API_PORT}/v0/get-territory?territory_id={territory_id}'
+        url = f'{BOARD_API_URL}/v0/get-territory?territory_id={territory_id}'
         async with session.get(url) as resp:
             data = await resp.json()
             territory = data
@@ -56,7 +53,7 @@ async def attack(request):
     data = json.dumps(data)
 
     async with aiohttp.ClientSession() as session:
-        url = f'{COMBAT_API_URL}:{COMBAT_API_PORT}/v0/basic-combat'
+        url = f'{COMBAT_API_URL}/v0/basic-combat'
         async with session.post(url, data=data) as resp:
             data = await resp.json()
         return web.json_response(data)
