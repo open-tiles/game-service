@@ -24,18 +24,14 @@ async def get_players(request):
         player_id = 1
         url = f'{PLAYER_API_URL}/v0/player/{player_id}'
         async with session.get(url) as resp:
-            print(resp.status)
-            print(await resp.text())
+            return await resp.text()
 
 
 async def get_territory(territory_id):
-    territory = None
     async with aiohttp.ClientSession() as session:
         url = f'{BOARD_API_URL}/v0/get-territory?territory_id={territory_id}'
         async with session.get(url) as resp:
-            data = await resp.json()
-            territory = data
-    return territory
+            return await resp.json()
 
 
 async def attack(request):
@@ -45,6 +41,11 @@ async def attack(request):
 
     attacker = await get_territory(attacker_id)
     defender = await get_territory(defender_id)
+
+    if attacker.get('error'):
+        return web.json_response(attacker, status=404)
+    if defender.get('error'):
+        return web.json_response(defender, status=404)
 
     data = {
             "attacker": attacker,
