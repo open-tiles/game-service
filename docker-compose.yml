@@ -11,9 +11,9 @@ services:
         ports:
             - 8765:3306
 
-    map-api:
-        container_name: map-api-risk
-        image: map-api
+    board-api:
+        container_name: board-api-risk
+        image: board-api
         environment:
             DB_HOST: 'risk-db'
             DB_USER: 'admin'
@@ -39,4 +39,4 @@ services:
         container_name: combat-api-risk
         image: combat-api
         ports:
-            - 7654:8080
+            - 6543:8080
