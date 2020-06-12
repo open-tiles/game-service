@@ -47,6 +47,8 @@ async def attack(request):
     if defender.get('error'):
         return web.json_response(defender, status=404)
 
+    attacking_player_id = attacker.get('owner')
+
     data = {
             "attacker": attacker,
             "defender": defender
@@ -57,7 +59,20 @@ async def attack(request):
         url = f'{COMBAT_API_URL}/v0/basic-combat'
         async with session.post(url, data=data) as resp:
             data = await resp.json()
-        return web.json_response(data)
+        # return web.json_response(data)
+
+    if data.get('result') < 1:
+        async with aiohttp.ClientSession() as session:
+            url = f'{BOARD_API_URL}/v0/change-ownership'
+            data = {
+                    'territory_id': defender_id,
+                    'player_id': attacking_player_id
+                    }
+            data = json.dumps(data)
+            async with session.patch(url, data=data) as resp:
+                return web.Response(text='we did it', status=200)
+    else:
+        return web.json_response({'result': 'attacker defeated'})
 
 
 async def close_db_conn(app):
