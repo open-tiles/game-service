@@ -21,6 +21,7 @@ dev-run:
 	adev runserver .
 
 install: install-test
-	pip install -r requirments
+	pip install -r requirements
 
-install-test: pip install -r requirements-test
+install-test: 
+	pip install -r requirements-test

@@ -70,7 +70,10 @@ async def attack(request):
                     }
             data = json.dumps(data)
             async with session.patch(url, data=data) as resp:
-                return web.Response(text='we did it', status=200)
+                if resp.status == 200:
+                    return web.Response(text='we did it', status=200)
+                else:
+                    return web.json_response({'error': 'something went wrong'})
     else:
         return web.json_response({'result': 'attacker defeated'})
 
