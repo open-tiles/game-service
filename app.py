@@ -48,6 +48,10 @@ async def attack(request):
         return web.json_response(defender, status=404)
 
     attacking_player_id = attacker.get('owner')
+    if attacking_player_id == 'Null':
+        return web.json_response(
+                {'error': 'attacking territory is not owned by any player'}
+                )
 
     data = {
             "attacker": attacker,
