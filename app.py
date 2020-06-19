@@ -7,15 +7,21 @@ from aiohttp import web
 BOARD_API_URL = os.environ.get('BOARD_API_URL')
 COMBAT_API_URL = os.environ.get('COMBAT_API_URL')
 PLAYER_API_URL = os.environ.get('PLAYER_API_URL')
+DB_HOST = os.environ.get('DB_HOST')
+
+DB_USER = os.environ.get('DB_USER')
+DB_PASS = os.environ.get('DB_PASS')
+DB_NAME = os.environ.get('DB_NAME')
+DB_PORT = int(os.environ('DB_PORT'))
 
 
 async def create_db_pool(app):
     app['pool'] = await aiomysql.create_pool(
-            host=os.environ['DB_HOST'],
-            user=os.environ['DB_USER'],
-            password=os.environ['DB_PASS'],
-            db=os.environ['DB_NAME'],
-            port=int(os.environ['DB_PORT'])
+            host=DB_HOST,
+            user=DB_USER,
+            password=DB_PASS,
+            db=DB_NAME,
+            port=DB_PORT
         )
 
 

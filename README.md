@@ -9,7 +9,7 @@ First start a virtual environment. For example:
 > python3.8 -m venv venv
 > . venv/bin/activate
 
-Then install the dependencies with `pip install -r requirements`.
+Install the dependencies with `make install`. 
 
 ### Docker
 
@@ -29,6 +29,13 @@ similar to `ready for connections. Version: '8.0.20'  socket:
 '/var/run/mysqld/mysqld.sock'  port: 3306  MySQL Community Server - GPL.`. Once
 the MySQL container has finished coming up run `make up` again. You can check
 that all expected containers are up by running `docker ps`.
+
+#### Important 
+
+Remember to keep your local images up to date.
+
+Soon images will be hosted so remembering to update images will no longer be an
+issue.
 
 ### Database
 
