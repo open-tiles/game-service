@@ -1,1 +1,3 @@
 flake8
+pytest-aiohttp==0.3.0
+aiohttp-devtools==0.13.1

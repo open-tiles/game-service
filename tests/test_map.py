@@ -1,9 +1,3 @@
-import pytest
-import aiohttp
-from models.map import Boarders
-from unittest.mock import Mock
-
-
 class FakeRequest():
 
     def __init(self, data=None):

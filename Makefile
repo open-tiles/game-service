@@ -17,6 +17,9 @@ run:
 test:
 	pytest
 
+down:
+	docker-compose down
+
 dev-run:
 	adev runserver .
 
