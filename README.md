@@ -54,7 +54,7 @@ mysql --host={HOST} --port={PORT} --protocol=TCP --user={USER} risk --password={
 #### `/v0/attack/`
 
 ``` http 
-    curl localhost:8000/v0/attack?attacker={territory_id}&defender={territory_id}
+    curl localhost:8000/v0/attack?attacker={territory_id}&defender={"territory_id"}
 ```
 
 ### POST 
@@ -62,5 +62,5 @@ mysql --host={HOST} --port={PORT} --protocol=TCP --user={USER} risk --password={
 #### `v0/randomly-assign-players
 
 ``` http
-    curl -x POST localhost:8000/v0/randomly-assing-players -d '{"player1_id": 1, player2_id": 2}'
+    curl -x POST localhost:8000/v0/randomly-assing-players -d '{"player1_id": 1, "player2_id": 2}'
 ```
