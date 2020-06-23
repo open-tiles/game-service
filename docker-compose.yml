@@ -5,8 +5,8 @@ services:
         image: mysql:latest
         environment:
             MYSQL_ROOT_PASSWORD: 'root'
-            MYSQL_USER: 'admin'
-            MYSQL_PASSWORD: 'admin'
+            MYSQL_USER: 'risk123'
+            MYSQL_PASSWORD: 'risk123'
             MYSQL_DATABASE: 'risk'
         ports:
             - 8765:3306
@@ -16,8 +16,8 @@ services:
         image: board-api
         environment:
             DB_HOST: 'risk-db'
-            DB_USER: 'admin'
-            DB_PASS: 'admin'
+            DB_USER: 'risk123'
+            DB_PASS: 'risk123'
             DB_NAME: 'risk'
             DB_PORT: '3306'
         ports:
@@ -28,8 +28,8 @@ services:
         image: player-api
         environment:
             DB_HOST: 'risk-db'
-            DB_USER: 'admin'
-            DB_PASS: 'admin'
+            DB_USER: 'risk123'
+            DB_PASS: 'risk123'
             DB_NAME: 'risk'
             DB_PORT: '3306'
         ports:

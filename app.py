@@ -12,7 +12,7 @@ DB_HOST = os.environ.get('DB_HOST')
 DB_USER = os.environ.get('DB_USER')
 DB_PASS = os.environ.get('DB_PASS')
 DB_NAME = os.environ.get('DB_NAME')
-DB_PORT = int(os.environ('DB_PORT'))
+DB_PORT = int(os.environ.get('DB_PORT'))
 
 
 async def create_db_pool(app):
@@ -88,6 +88,10 @@ async def attack(request):
         return web.json_response({'result': 'attacker defeated'})
 
 
+async def randomly_assign(request):
+    return web.Response(text="TODO", status=200)
+
+
 async def close_db_conn(app):
     await app['pool'].close()
 
@@ -98,6 +102,7 @@ app.on_startup.append(create_db_pool)
 
 app.add_routes([
         web.get('/v0/attack', attack),
+        web.post('/v0/randomly-assign-territories', randomly_assign),
         ])
 
 if __name__ == "__main__":
