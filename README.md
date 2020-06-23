@@ -39,7 +39,13 @@ issue.
 
 ### Database
 
-> mysql --host={HOST} --port={PORT} --protocol=TCP --user={USER} risk --password={PASSWORD}
+To connect to the mysql database running in a the docker container run the
+following command.
+
+
+``` bash
+mysql --host={HOST} --port={PORT} --protocol=TCP --user={USER} risk --password={PASSWORD}`
+```
  
 ## Using the API 
 
@@ -49,4 +55,12 @@ issue.
 
 ``` http 
     curl localhost:8000/v0/attack?attacker={territory_id}&defender={territory_id}
+```
+
+### POST 
+
+#### `v0/randomly-assign-players
+
+``` http
+    curl -x POST localhost:8000/v0/randomly-assing-players -d '{"player1_id": 1, player2_id": 2}'
 ```
