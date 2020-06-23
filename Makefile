@@ -1,6 +1,6 @@
 export DB_HOST?=127.0.0.1
-export DB_PASS?=admin
-export DB_USER?=admin
+export DB_PASS?=risk123
+export DB_USER?=risk123
 export DB_NAME?=risk
 export DB_PORT?=8765
 export BOARD_API_URL?=http://localhost:4321
