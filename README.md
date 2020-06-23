@@ -54,7 +54,7 @@ mysql --host={HOST} --port={PORT} --protocol=TCP --user={USER} risk --password={
 #### `/v0/attack/`
 
 ``` http 
-    curl localhost:8000/v0/attack?attacker={territory_id}&defender={"territory_id"}
+    curl localhost:8000/v0/attack?attacker={"territory_id"}&defender={"territory_id"}
 ```
 
 ### POST 
