@@ -69,23 +69,43 @@ async def attack(request):
         url = f'{COMBAT_API_URL}/v0/basic-combat'
         async with session.post(url, data=data) as resp:
             data = await resp.json()
+            tokens = data.get('result')
         # return web.json_response(data)
 
-    if data.get('result') < 1:
+    if tokens < 1:
         async with aiohttp.ClientSession() as session:
             url = f'{BOARD_API_URL}/v0/change-ownership'
             data = {
                     'territory_id': defender_id,
                     'player_id': attacking_player_id
                     }
+            defender_id = data.get('territory_id')
             data = json.dumps(data)
             async with session.patch(url, data=data) as resp:
                 if resp.status == 200:
+                    update_tokens(request, tokens, defender_id)
                     return web.Response(text='we did it', status=200)
                 else:
                     return web.json_response({'error': 'something went wrong'})
+
     else:
         return web.json_response({'result': 'attacker defeated'})
+
+
+async def update_tokens(request, tokens, defender_id):
+    async with aiohttp.ClientSession() as session:
+        url = f'{BOARD_API_URL}/v0/add-tokens'
+        data = {
+                'tokens': tokens,
+                'territory_id': defender_id
+                }
+        async with session.patch(url, data=data) as resp:
+            if resp.status == 200:
+                return web.Response(
+                    text='we did it', status=200)
+            else:
+                return web.json_response(
+                    {'error': 'something went wrong'})
 
 
 async def randomly_assign(request):

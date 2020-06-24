@@ -11,7 +11,7 @@ export COMBAT_API_URL?=http://localhost:6543
 up:
 	docker-compose up -d
 
-run: 
+run:
 	python app.py
 
 test:
@@ -26,5 +26,5 @@ dev-run:
 install: install-test
 	pip install -r requirements
 
-install-test: 
+install-test:
 	pip install -r requirements-test
