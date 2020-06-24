@@ -69,6 +69,7 @@ async def attack(request):
         url = f'{COMBAT_API_URL}/v0/basic-combat'
         async with session.post(url, data=data) as resp:
             data = await resp.json()
+            tokens = data['result']
         # return web.json_response(data)
 
     if data.get('result') < 1:
@@ -81,9 +82,21 @@ async def attack(request):
             data = json.dumps(data)
             async with session.patch(url, data=data) as resp:
                 if resp.status == 200:
+                    async with aiohttp.ClientSession() as session:
+                        url = f'{BOARD_API_URL}/v0/add-tokens'
+                        data = {
+                                'tokens': tokens,
+                                'territory_id': defender_id
+                                }
+                        async with session.patch(url, data=data) as resp:
+                            if resp.status == 200:
+                                return web.Response(
+                                    text='we did it', status=200)
+
                     return web.Response(text='we did it', status=200)
                 else:
                     return web.json_response({'error': 'something went wrong'})
+
     else:
         return web.json_response({'result': 'attacker defeated'})
 
