@@ -1,6 +1,6 @@
 # Game Service
 
-##Overview 
+## Overview 
 
 Up to three players on a board made of as tiles. Objective for each player is
 to control every hexagon on the board or be the last player in the game.
