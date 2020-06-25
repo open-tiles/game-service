@@ -1,19 +1,54 @@
 # Game Service
 
-Responsible for handling all game requests.
+##Overview 
 
-## Game Overview 
+Up to three players on a board made of as tiles. Objective for each player is
+to control every hexagon on the board or be the last player in the game.
 
 ![Example Board](tiles.svg)
 
-## Development
+### Board
 
-First start a virtual environment. For example:
+A players goal is to either control the entire board, or enough of the board
+that their opponent surrenders.
+
+Boards are constructed out of hexagons called tiles. The properties of a tile
+are listed below.
+
+The way a player controls the board is by moving 'tokens' on to an adjoining
+tile. A player controls a tile when they leave a minimum of one token on a
+tile. 
+
+Tiles on the board are contestable. Where an opponent owns an adjacent tile to
+a neutral tile or a tile owned by another player, they may attempt to take
+control of that adjacent tile. The number of tokens on a tile determines the
+success of one player attempting to gain control of a tile. This is discussed
+further in the 'Rules' section.
+
+####  Tiles 
+
+Tiles have the following properties:
+  - have two states. Owned and neutral
+  - hold _n_ number of tokens
+  - must be adjacent to at least one other tile
+
+#### Starting state 
+
+A board begins with every tile in the neutral state, except for the tile a
+player starts on. 
+
+### Rules
+
+A tile that is adjacent to another tile can attack the adjoining tile.
+
+### Win Conditions
 
 > python3.8 -m venv venv
 > . venv/bin/activate
 
 Install the dependencies with `make install`. 
+
+## Development
 
 ### Docker
 

@@ -19,18 +19,18 @@
   <sodipodi:namedview
      inkscape:window-maximized="0"
      inkscape:window-y="0"
-     inkscape:window-x="512"
+     inkscape:window-x="768"
      inkscape:window-height="1415"
-     inkscape:window-width="1193"
+     inkscape:window-width="1790"
      showguides="true"
      inkscape:snap-bbox="true"
      showgrid="true"
      inkscape:document-rotation="0"
      inkscape:current-layer="layer1"
      inkscape:document-units="mm"
-     inkscape:cy="375.34954"
-     inkscape:cx="398.0097"
-     inkscape:zoom="0.98994949"
+     inkscape:cy="389.97951"
+     inkscape:cx="1007.8058"
+     inkscape:zoom="0.7"
      inkscape:pageshadow="2"
      inkscape:pageopacity="0.0"
      borderopacity="1.0"
@@ -97,7 +97,7 @@
        id="path76-3-9-2-7-0" />
     <path
        style="fill:#b3b3b3;stroke:#000000;stroke-width:1.85032px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="m 50.159748,196.52102 18.506205,27.76025 h 27.75932 L 114.93095,196.52102 96.425273,168.76213 h -27.75932 z"
+       d="M 48.984475,197.09222 67.49068,224.85247 H 95.25 L 113.75568,197.09222 95.25,169.33333 H 67.49068 Z"
        id="path76-3-9-9" />
     <text
        id="text194"
@@ -112,13 +112,13 @@
          sodipodi:role="line">A</tspan></text>
     <text
        id="text198"
-       y="204.9109"
-       x="74.34436"
+       y="204.29857"
+       x="73.165489"
        style="font-style:normal;font-weight:normal;font-size:25.6081px;line-height:1.25;font-family:sans-serif;fill:#0000ff;fill-opacity:1;stroke:none;stroke-width:0.640149"
        xml:space="preserve"><tspan
          style="fill:#0000ff;stroke-width:0.640149"
-         y="204.9109"
-         x="74.34436"
+         y="204.29857"
+         x="73.165489"
          id="tspan196"
          sodipodi:role="line">B</tspan></text>
   </g>
