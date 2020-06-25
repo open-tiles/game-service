@@ -43,12 +43,12 @@ A tile that is adjacent to another tile can attack the adjoining tile.
 
 ### Win Conditions
 
+## Development
+
 > python3.8 -m venv venv
 > . venv/bin/activate
 
 Install the dependencies with `make install`. 
-
-## Development
 
 ### Docker
 
