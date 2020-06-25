@@ -2,6 +2,10 @@
 
 Responsible for handling all game requests.
 
+## Game Overview 
+
+![Example Board](tiles.svg)
+
 ## Development
 
 First start a virtual environment. For example:
