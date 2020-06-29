@@ -108,6 +108,19 @@ async def update_tokens(request, tokens, defender_id):
                     {'error': 'something went wrong'})
 
 
+async def load_board(request):
+
+    params = request.rel_url.query
+    board_id = params['board_id']
+    async with aiohttp.ClientSession() as session:
+        url = f'{BOARD_API_URL}/v0/get-board?board_id={board_id}'
+        async with session.get(url) as resp:
+            board = {}
+            if resp.status == 200:
+                board = await resp.json()
+    return web.json_response(board, status=200)
+
+
 async def randomly_assign(request):
     return web.Response(text="TODO", status=200)
 
@@ -121,6 +134,7 @@ app = web.Application()
 app.on_startup.append(create_db_pool)
 
 app.add_routes([
+        web.get('/board', load_board),
         web.get('/v0/attack', attack),
         web.post('/v0/randomly-assign-territories', randomly_assign),
         ])
