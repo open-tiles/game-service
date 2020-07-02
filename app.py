@@ -3,12 +3,13 @@ import json
 import aiohttp
 import aiomysql
 from aiohttp import web
+from attack import check_connection, hex_attack
 
 BOARD_API_URL = os.environ.get('BOARD_API_URL')
 COMBAT_API_URL = os.environ.get('COMBAT_API_URL')
 PLAYER_API_URL = os.environ.get('PLAYER_API_URL')
-DB_HOST = os.environ.get('DB_HOST')
 
+DB_HOST = os.environ.get('DB_HOST')
 DB_USER = os.environ.get('DB_USER')
 DB_PASS = os.environ.get('DB_PASS')
 DB_NAME = os.environ.get('DB_NAME')
@@ -134,8 +135,10 @@ app = web.Application()
 app.on_startup.append(create_db_pool)
 
 app.add_routes([
-        web.get('/board', load_board),
-        web.get('/v0/attack', attack),
+        web.get('/v0/board', load_board),
+        web.get('/v0/attack', hex_attack),
+        # web.get('/v0/attack', attack),
+        web.get('/v0/check-connection', check_connection),
         web.post('/v0/randomly-assign-territories', randomly_assign),
         ])
 
