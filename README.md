@@ -83,7 +83,7 @@ following command.
 
 
 ``` bash
-mysql --host={HOST} --port={PORT} --protocol=TCP --user={USER} risk --password={PASSWORD}`
+mysql --host={HOST} --port={PORT} --protocol=TCP --user={USER} risk --password={PASSWORD}
 ```
  
 ## Using the API 
