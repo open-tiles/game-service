@@ -3,12 +3,13 @@ import json
 import aiohttp
 import aiomysql
 from aiohttp import web
+from attack import check_connection, hex_attack
 
 BOARD_API_URL = os.environ.get('BOARD_API_URL')
 COMBAT_API_URL = os.environ.get('COMBAT_API_URL')
 PLAYER_API_URL = os.environ.get('PLAYER_API_URL')
-DB_HOST = os.environ.get('DB_HOST')
 
+DB_HOST = os.environ.get('DB_HOST')
 DB_USER = os.environ.get('DB_USER')
 DB_PASS = os.environ.get('DB_PASS')
 DB_NAME = os.environ.get('DB_NAME')
@@ -108,6 +109,19 @@ async def update_tokens(request, tokens, defender_id):
                     {'error': 'something went wrong'})
 
 
+async def load_board(request):
+
+    params = request.rel_url.query
+    board_id = params['board_id']
+    async with aiohttp.ClientSession() as session:
+        url = f'{BOARD_API_URL}/v0/get-board?board_id={board_id}'
+        async with session.get(url) as resp:
+            board = {}
+            if resp.status == 200:
+                board = await resp.json()
+    return web.json_response(board, status=200)
+
+
 async def randomly_assign(request):
     return web.Response(text="TODO", status=200)
 
@@ -121,7 +135,10 @@ app = web.Application()
 app.on_startup.append(create_db_pool)
 
 app.add_routes([
-        web.get('/v0/attack', attack),
+        web.get('/v0/board', load_board),
+        web.get('/v0/attack', hex_attack),
+        # web.get('/v0/attack', attack),
+        web.get('/v0/check-connection', check_connection),
         web.post('/v0/randomly-assign-territories', randomly_assign),
         ])
 

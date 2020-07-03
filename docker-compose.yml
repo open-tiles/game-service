@@ -1,13 +1,13 @@
 version: "3.8"
 services:
-    risk-db:
-        container_name: risk-db
+    tiles-db:
+        container_name: tiles-db
         image: mysql:latest
         environment:
             MYSQL_ROOT_PASSWORD: 'root'
-            MYSQL_USER: 'risk123'
-            MYSQL_PASSWORD: 'risk123'
-            MYSQL_DATABASE: 'risk'
+            MYSQL_USER: 'tilesdev'
+            MYSQL_PASSWORD: 'tilesdev'
+            MYSQL_DATABASE: 'tiles'
         ports:
             - 8765:3306
 
@@ -15,10 +15,10 @@ services:
         container_name: board-api-risk
         image: board-api
         environment:
-            DB_HOST: 'risk-db'
-            DB_USER: 'risk123'
-            DB_PASS: 'risk123'
-            DB_NAME: 'risk'
+            DB_HOST: 'tiles-db'
+            DB_USER: 'tilesdev'
+            DB_PASS: 'tilesdev'
+            DB_NAME: 'tiles'
             DB_PORT: '3306'
         ports:
             - 4321:8080
@@ -27,10 +27,10 @@ services:
         container_name: player-api-risk
         image: player-api
         environment:
-            DB_HOST: 'risk-db'
-            DB_USER: 'risk123'
-            DB_PASS: 'risk123'
-            DB_NAME: 'risk'
+            DB_HOST: 'tiles-db'
+            DB_USER: 'tilesdev'
+            DB_PASS: 'tilesdev'
+            DB_NAME: 'tiles'
             DB_PORT: '3306'
         ports:
             - 5432:8080
