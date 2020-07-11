@@ -2,8 +2,9 @@ import os
 import json
 import aiohttp
 import aiomysql
+import behaviour
 from aiohttp import web
-from attack import check_connection, hex_attack
+import attack as attacking
 
 BOARD_API_URL = os.environ.get('BOARD_API_URL')
 COMBAT_API_URL = os.environ.get('COMBAT_API_URL')
@@ -110,11 +111,10 @@ async def update_tokens(request, tokens, defender_id):
 
 
 async def load_board(request):
-
     params = request.rel_url.query
     board_id = params['board_id']
     async with aiohttp.ClientSession() as session:
-        url = f'{BOARD_API_URL}/v0/get-board?board_id={board_id}'
+        url = f'{BOARD_API_URL}/v0/get-board?id={board_id}'
         async with session.get(url) as resp:
             board = {}
             if resp.status == 200:
@@ -136,10 +136,10 @@ app.on_startup.append(create_db_pool)
 
 app.add_routes([
         web.get('/v0/board', load_board),
-        web.get('/v0/attack', hex_attack),
-        # web.get('/v0/attack', attack),
-        web.get('/v0/check-connection', check_connection),
+        web.get('/v0/attack', attacking.hex_attack),
+        web.get('/v0/check-connection', attacking.check_connection),
         web.post('/v0/randomly-assign-territories', randomly_assign),
+        web.get('/v0/update-turn', behaviour.update_turn),
         ])
 
 if __name__ == "__main__":
