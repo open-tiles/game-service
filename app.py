@@ -130,6 +130,14 @@ async def close_db_conn(app):
     await app['pool'].close()
 
 
+# Temporary I wanted to test out updating turns from the game-service
+async def test_handler(request):
+    data = await request.json()
+    t = data.get('next')
+    b = data.get('id')
+    res = await behaviour.update_turn(t, b)
+    return web.Response(text=res.text, status=200)
+
 app = web.Application()
 
 app.on_startup.append(create_db_pool)
@@ -139,7 +147,7 @@ app.add_routes([
         web.get('/v0/attack', attacking.hex_attack),
         web.get('/v0/check-connection', attacking.check_connection),
         web.post('/v0/randomly-assign-territories', randomly_assign),
-        web.get('/v0/update-turn', behaviour.update_turn),
+        web.patch('/v0/update-turn', test_handler),
         ])
 
 if __name__ == "__main__":
