@@ -29,7 +29,7 @@ async def hex_attack(request):
             return web.json_response(json.loads(x.text))
         else:
             update_tokens(result, defender.get('hex_id'))
-        return web.json_response({'we': 'did it'})
+        return web.json_response({'attacker': 'lost'})
     return web.json_response({'something': 'else'})
 
 
@@ -53,7 +53,6 @@ async def change_ownership(player_id, hex_id):
                 'hex_id': hex_id
                 }
         data = json.dumps(data)
-        print(data)
         async with session.patch(url, data=data) as resp:
             if resp.status == 200:
                 return web.json_response({'good': 'job'})
@@ -96,15 +95,3 @@ async def basic_combat(attacker, defender):
             data = await resp.json()
             tokens = data.get('result')
             return tokens
-
-
-async def load_board(request):
-    params = request.rel_url.query
-    board_id = params['id']
-    async with aiohttp.ClientSession() as session:
-        url = f'{BOARD_API_URL}/v0/get-board?board_id={board_id}'
-        async with session.get(url) as resp:
-            board = {}
-            if resp.status == 200:
-                board = await resp.json()
-    return web.json_response(board, status=200)
