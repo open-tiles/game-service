@@ -9,6 +9,7 @@ export COMBAT_API_URL?=http://localhost:6543
 
 
 up:
+	docker-compose pull
 	docker-compose up -d
 
 run:
