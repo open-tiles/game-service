@@ -16,7 +16,11 @@ async def update_turn(next_player, board_id):
     async with aiohttp.ClientSession() as session:
         async with session.patch(url, data=data) as resp:
             data = await resp.json()
-            return web.json_response(data)
+            return web.json_response(
+                    data,
+                    headers={
+                        "Access-Control-Allow-Origin": "*",
+                        })
 
 
 async def load_board(request):
@@ -25,10 +29,16 @@ async def load_board(request):
     async with aiohttp.ClientSession() as session:
         url = f'{BOARD_API_URL}/v0/get-board?id={board_id}'
         async with session.get(url) as resp:
-            board = {}
+            board = {'a': 'b'}
             if resp.status == 200:
                 board = await resp.json()
-    return web.json_response(board, status=200)
+    return web.json_response(
+            board,
+            headers={
+                "Access-Control-Allow-Origin": "*",
+                },
+            status=200
+            )
 
 
 async def update_tokens(request, tokens, defender_id):

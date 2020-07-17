@@ -1,6 +1,4 @@
 import os
-import json
-import aiohttp
 import aiomysql
 import behaviour
 from aiohttp import web
@@ -34,7 +32,7 @@ app.add_routes([
         web.get('/v0/board', behaviour.load_board),
         web.get('/v0/attack', attacking.hex_attack),
         web.get('/v0/check-connection', attacking.check_connection),
-        web.get('/v0/update-tokens', behaviour.update_tokens),
+        web.patch('/v0/update-tokens', behaviour.update_tokens),
         ])
 
 if __name__ == "__main__":
