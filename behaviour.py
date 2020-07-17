@@ -41,7 +41,7 @@ async def load_board(request):
             )
 
 
-async def update_tokens(request, tokens, defender_id):
+async def update_tokens(tokens, defender_id):
     async with aiohttp.ClientSession() as session:
         url = f'{BOARD_API_URL}/v0/add-tokens'
         data = {
@@ -54,4 +54,4 @@ async def update_tokens(request, tokens, defender_id):
                     text='we did it', status=200)
             else:
                 return web.json_response(
-                    {'error': 'something went wrong'})
+                    {'error': 'something went wrong'}, status=400)

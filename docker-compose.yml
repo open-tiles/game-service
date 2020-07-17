@@ -3,12 +3,12 @@ services:
     tiles-db:
         container_name: tiles-db
         image: mysql:latest
+        command: mysqld --default-authentication-plugin=mysql_native_password
         environment:
             MYSQL_ROOT_PASSWORD: 'root'
             MYSQL_USER: 'tilesdev'
             MYSQL_PASSWORD: 'tilesdev'
             MYSQL_DATABASE: 'tiles'
-            command: mysqld --default-authentication-plugin=mysql_native_password
         ports:
             - 8765:3306
 
