@@ -36,6 +36,19 @@ services:
         ports:
             - 5432:8080
 
+    game-service:
+        container_name: game-service-tiles
+        image: adam64/open-tiles_game-service
+        environment:
+            BOARD_API_URL: 'http://board-api:8080'
+            DB_HOST: 'tiles-db'
+            DB_USER: 'tilesdev'
+            DB_PASS: 'tilesdev'
+            DB_NAME: 'tiles'
+            DB_PORT: '3306'
+        ports: 
+            - 7654:8080
+
     combat-api:
         container_name: combat-api-tiles
         image: adam64/open-tiles_combat-api:latest
