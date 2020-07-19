@@ -5,6 +5,8 @@ from aiohttp import web
 
 BOARD_API_URL = os.environ.get('BOARD_API_URL')
 
+headers = {"Access-Control-Allow-Origin": "*"}
+
 
 async def update_turn(next_player, board_id):
     url = f'{BOARD_API_URL}/v0/update-turn'
@@ -18,9 +20,9 @@ async def update_turn(next_player, board_id):
             data = await resp.json()
             return web.json_response(
                     data,
-                    headers={
-                        "Access-Control-Allow-Origin": "*",
-                        })
+                    headers=headers,
+                    status=200
+                    )
 
 
 async def load_board(request):
@@ -29,16 +31,18 @@ async def load_board(request):
     async with aiohttp.ClientSession() as session:
         url = f'{BOARD_API_URL}/v0/get-board?id={board_id}'
         async with session.get(url) as resp:
-            board = {'a': 'b'}
             if resp.status == 200:
                 board = await resp.json()
-    return web.json_response(
-            board,
-            headers={
-                "Access-Control-Allow-Origin": "*",
-                },
-            status=200
-            )
+                return web.json_response(
+                        board,
+                        headers=headers,
+                        status=200
+                        )
+        return web.json_response(
+                {'Error': 'No board found'},
+                headers=headers,
+                status=404
+                )
 
 
 async def update_tokens(tokens, defender_id):
