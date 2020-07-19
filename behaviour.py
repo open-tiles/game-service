@@ -4,6 +4,7 @@ import aiohttp
 from aiohttp import web
 
 BOARD_API_URL = os.environ.get('BOARD_API_URL')
+PLAYER_API_URL = os.environ.get('PLAYER_API_URL')
 
 headers = {"Access-Control-Allow-Origin": "*"}
 
@@ -25,24 +26,37 @@ async def update_turn(next_player, board_id):
                     )
 
 
+async def players_on_board(board_id):
+    url = f'{PLAYER_API_URL}/v0/board-players?id={board_id}'
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url) as resp:
+            if resp.status == 200:
+                players = await resp.json()
+                return web.json_response(players)
+
+
+async def get_board(board_id):
+    url = f'{BOARD_API_URL}/v0/get-board?id={board_id}'
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url) as resp:
+            if resp.status == 200:
+                players = await resp.json()
+                return web.json_response(players)
+
+
 async def load_board(request):
     params = request.rel_url.query
     board_id = params['id']
-    async with aiohttp.ClientSession() as session:
-        url = f'{BOARD_API_URL}/v0/get-board?id={board_id}'
-        async with session.get(url) as resp:
-            if resp.status == 200:
-                board = await resp.json()
-                return web.json_response(
-                        board,
-                        headers=headers,
-                        status=200
-                        )
-        return web.json_response(
-                {'Error': 'No board found'},
-                headers=headers,
-                status=404
-                )
+    players = await players_on_board(board_id)
+    board = await get_board(board_id)
+    players = json.loads(players.text)
+    board = json.loads(board.text)
+    board['board-info']['players'] = players
+    return web.json_response(
+            board,
+            headers=headers,
+            status=200
+            )
 
 
 async def update_tokens(tokens, defender_id):
