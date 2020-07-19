@@ -25,12 +25,12 @@ async def hex_attack(request):
                     attacker.get('player_id'),
                     defender.get('hex_id')
                     )
-            x = await update_tokens(result, defender.get('hex_id'))
-            return web.json_response(json.loads(x.text))
+            combat_result = await update_tokens(result, defender.get('hex_id'))
+            return web.json_response(json.loads(combat_result.text))
         else:
             update_tokens(result, defender.get('hex_id'))
         return web.json_response({'attacker': 'lost'})
-    return web.json_response({'something': 'else'})
+    return web.json_response({'Result': 'No connection'})
 
 
 async def check_connection(from_id, to_id):
