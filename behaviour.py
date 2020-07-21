@@ -32,16 +32,20 @@ async def players_on_board(board_id):
         async with session.get(url) as resp:
             if resp.status == 200:
                 players = await resp.json()
-                return web.json_response(players)
+                return players
+            if resp.status == 500:
+                return {'Error': 'Server error'}
+
 
 
 async def get_board(board_id):
     url = f'{BOARD_API_URL}/v0/get-board?id={board_id}'
     async with aiohttp.ClientSession() as session:
         async with session.get(url) as resp:
-            if resp.status == 200:
-                players = await resp.json()
-                return web.json_response(players)
+            board = await resp.json()
+            return board
+        if resp.status == 500:
+            return {'Error': 'Server error'}
 
 
 async def load_board(request):
@@ -49,8 +53,9 @@ async def load_board(request):
     board_id = params['id']
     players = await players_on_board(board_id)
     board = await get_board(board_id)
+    if 'Error' in board:
+        return web.json_response(board, status=404)
     players = json.loads(players.text)
-    board = json.loads(board.text)
     board['board-info']['players'] = players
     return web.json_response(
             board,
