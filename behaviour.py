@@ -51,7 +51,11 @@ async def load_board(request):
     players = await players_on_board(board_id)
     board = await get_board(board_id)
     if 'Error' in board:
-        return web.json_response(board, status=404)
+        return web.json_response(
+                board,
+                headers=headers,
+                status=404
+                )
     board['board-info']['players'] = players
     return web.json_response(
             board,
