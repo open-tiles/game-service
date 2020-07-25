@@ -8,6 +8,9 @@ export PLAYER_API_URL?=http://localhost:5432
 export COMBAT_API_URL?=http://localhost:6543
 
 
+branch:
+	git branch --show-current
+	
 up:
 	docker-compose pull
 	docker-compose up -d
