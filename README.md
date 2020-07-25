@@ -1,13 +1,11 @@
-# Game Service
-
-## Overview 
+# Overview 
 
 Up to three players on a board made of as tiles. Objective for each player is
 to control every hexagon on the board or be the last player in the game.
 
 ![Example Board](tiles.svg)
 
-### Board
+## Board
 
 A players goal is to either control the entire board, or enough of the board
 that their opponent surrenders.
@@ -25,25 +23,25 @@ control of that adjacent tile. The number of tokens on a tile determines the
 success of one player attempting to gain control of a tile. This is discussed
 further in the 'Rules' section.
 
-####  Tiles 
+###  Tiles 
 
 Tiles have the following properties:
   - have two states. Owned and neutral
   - hold _n_ number of tokens
   - must be adjacent to at least one other tile
 
-#### Starting state 
+### Starting state 
 
 A board begins with every tile in the neutral state, except for the tile a
 player starts on. 
 
-### Rules
+## Rules
 
 A tile that is adjacent to another tile can attack the adjoining tile.
 
-### Win Conditions
+## Win Conditions
 
-## Development
+# Development
 
 > python3.8 -m venv venv
 > . venv/bin/activate
@@ -69,14 +67,14 @@ similar to `ready for connections. Version: '8.0.20'  socket:
 the MySQL container has finished coming up run `make up` again. You can check
 that all expected containers are up by running `docker ps`.
 
-#### Important 
+### Important 
 
 Remember to keep your local images up to date.
 
 Soon images will be hosted so remembering to update images will no longer be an
 issue.
 
-### Database
+## Database
 
 To connect to the mysql database running in a the docker container run the
 following command.
@@ -86,20 +84,45 @@ following command.
 mysql --host={HOST} --port={PORT} --protocol=TCP --user={USER} risk --password={PASSWORD}
 ```
  
-## Using the API 
+# Using the API 
 
-### GET 
 
-#### `/v0/attack/`
+## `v0/board | GET
 
-``` http 
-    curl localhost:8000/v0/attack?attacker={"territory_id"}&defender={"territory_id"}
-```
 
-### POST 
+Load the board state for a given board id
 
-#### `v0/randomly-assign-players
 
 ``` http
-    curl -x POST localhost:8000/v0/randomly-assing-players -d '{"player1_id": 1, "player2_id": 2}'
+    /v0/board?id=1
 ```
+
+## `/v0/attack/` | PATCH
+
+
+``` json
+    {
+        "attacker" : 
+            {
+                "hex_id": 1,
+                "tokens": 12
+            },
+        "defender":
+            {
+                "hex_id: 2"
+                "tokens": 10
+            },
+    }
+```
+
+### Responses
+
+**Attack Completed**: Attacks can be completed but not always be successful.
+Attacking with to few tokens results in a defeat. Attacking with enough tokens
+results in taking over a tile.
+
+**No Connection**: Trying to attack a destination tile that is not connected to
+the source tile will return a __no connection__ response and no attack is
+completed.
+
+
