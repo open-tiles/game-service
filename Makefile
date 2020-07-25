@@ -1,3 +1,4 @@
+IP=$(shell docker inspect game-service-tiles | grep "\"IPAddress\": \"172")
 export DB_HOST?=127.0.0.1
 export DB_PASS?=tilesdev
 export DB_USER?=tilesdev
@@ -7,6 +8,9 @@ export BOARD_API_URL?=http://localhost:4321
 export PLAYER_API_URL?=http://localhost:5432
 export COMBAT_API_URL?=http://localhost:6543
 
+
+ip:
+	@echo ${IP}
 
 up:
 	docker-compose pull
