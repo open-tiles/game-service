@@ -101,15 +101,15 @@ Load the board state for a given board id
 
 ```json
     {
-        boardInfo: {
+        "boardInfo": {
             "description": "My Great Board!",
             "created": "2020-07-25",
             "columns": 3,
             "rows": 3
             },
-        players: {
+        "players": {
             }
-        tiles: [
+        "tiles": [
             {},
             {}
             ]
