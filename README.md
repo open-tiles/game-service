@@ -163,12 +163,12 @@ Load the board state for a given board id
     {
         "report": {
             "success": "False",
-        }
+        },
         "attackingTile": {
             "id": 2,
             "owner": 12,
             "lostTokens": 20,
-        }
+        },
         "attackedTile": {
             "id": 3,
             "currentOwner": 3,
@@ -176,6 +176,12 @@ Load the board state for a given board id
             "currentTokens": 2,
         }
     }
+```
+
+#### no connection
+
+```json
+    {"connection": "False"}
 ```
 
 **Attack Completed**: Attacks can be completed but not always be successful.
