@@ -1,8 +1,7 @@
 import os
-import json
-import aiohttp
 import aiomysql
 import behaviour
+import aiohttp_cors
 from aiohttp import web
 import attack as attacking
 
@@ -30,11 +29,30 @@ async def close_db_conn(app):
 app = web.Application()
 app.on_startup.append(create_db_pool)
 
+cors = aiohttp_cors.setup(app)
+
+resource = cors.add(app.router.add_resource("/v0/attack"))
+route = cors.add(
+        resource.add_route("PATCH", attacking.hex_attack), {
+            "*": aiohttp_cors.ResourceOptions(
+                allow_credentials=True,
+                expose_headers=(
+                    "Access-Control-Allow-Origin",
+                    "X-Custom-Server-Header"
+                    ),
+                allow_headers=(
+                    "X-Custom",
+                    "Access-Control-Allow-Origin",
+                    "application/json",
+                    "Content-Type"
+                    ),
+                )
+        })
+
 app.add_routes([
         web.get('/v0/board', behaviour.load_board),
-        web.get('/v0/attack', attacking.hex_attack),
         web.get('/v0/check-connection', attacking.check_connection),
-        web.get('/v0/update-tokens', behaviour.update_tokens),
+        web.patch('/v0/update-tokens', behaviour.update_tokens),
         ])
 
 if __name__ == "__main__":

@@ -3,6 +3,7 @@ services:
     tiles-db:
         container_name: tiles-db
         image: mysql:latest
+        command: mysqld --default-authentication-plugin=mysql_native_password
         environment:
             MYSQL_ROOT_PASSWORD: 'root'
             MYSQL_USER: 'tilesdev'
@@ -34,6 +35,21 @@ services:
             DB_PORT: '3306'
         ports:
             - 5432:8080
+
+    game-service:
+        container_name: game-service-tiles
+        image: adam64/open-tiles_game-service
+        environment:
+            DB_HOST: 'tiles-db'
+            DB_USER: 'tilesdev'
+            DB_PASS: 'tilesdev'
+            DB_NAME: 'tiles'
+            DB_PORT: '3306'
+            BOARD_API_URL: 'http://board-api:8080'
+            COMBAT_API_URL: 'http://combat-api:8080'
+            PLAYER_API_URL: 'http://player-api:8080'
+        ports: 
+            - 7654:8080
 
     combat-api:
         container_name: combat-api-tiles

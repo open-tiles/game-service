@@ -7,15 +7,25 @@ BOARD_API_URL = os.environ.get('BOARD_API_URL')
 COMBAT_API_URL = os.environ.get('COMBAT_API_URL')
 
 
+async def test_handler(request):
+    return web.json_response(
+            {"my": "json"},
+            status=200
+            )
+
+
 async def hex_attack(request):
-    params = request.rel_url.query
-    attacker = await get_hex(params['attacker'])
-    defender = await get_hex(params['defender'])
+    data = await request.json()
+    attacker_id = data.get('attacker').get('hex-id')
+    defender_id = data.get('defender').get('hex-id')
+    attacker = await get_hex(attacker_id)
+    print(attacker.text)
+    defender = await get_hex(defender_id)
     attacker = json.loads(attacker.text)
     defender = json.loads(defender.text)
     connection = await check_connection(
-            attacker.get('hex_id'),
-            defender.get('hex_id')
+            attacker_id,
+            defender_id
             )
     connection = json.loads(connection.text)
     if connection.get('Connection'):
@@ -25,12 +35,21 @@ async def hex_attack(request):
                     attacker.get('player_id'),
                     defender.get('hex_id')
                     )
-            x = await update_tokens(result, defender.get('hex_id'))
-            return web.json_response(json.loads(x.text))
+            combat_result = await update_tokens(result, defender.get('hex_id'))
+            return web.json_response(
+                    json.loads(combat_result.text),
+                    status=200
+                    )
         else:
             update_tokens(result, defender.get('hex_id'))
-        return web.json_response({'attacker': 'lost'})
-    return web.json_response({'something': 'else'})
+        return web.json_response(
+                {'attacker': 'lost'},
+                status=200
+                )
+    return web.json_response(
+            {'Result': 'No connection'},
+            status=200
+            )
 
 
 async def check_connection(from_id, to_id):
@@ -38,7 +57,9 @@ async def check_connection(from_id, to_id):
         url = f'{BOARD_API_URL}/v0/check-connection?from={from_id}&to={to_id}'
         async with session.get(url) as resp:
             if resp.status == 200:
-                return web.json_response(await resp.json())
+                return web.json_response(
+                        await resp.json(),
+                        )
             return web.json_response(
                     {"error": "check your hex IDs"},
                     status=404
@@ -55,7 +76,9 @@ async def change_ownership(player_id, hex_id):
         data = json.dumps(data)
         async with session.patch(url, data=data) as resp:
             if resp.status == 200:
-                return web.json_response({'good': 'job'})
+                return web.json_response(
+                        {'good': 'job'},
+                        status=200)
 
 
 async def update_tokens(tokens, hex_id):
@@ -68,18 +91,22 @@ async def update_tokens(tokens, hex_id):
         data = json.dumps(data)
         async with session.patch(url, data=data) as resp:
             if resp.status == 200:
-                return web.json_response(
-                        {'winner': ''}, status=200)
+               return web.json_response(
+                        {'winner': 'eeeeeee'},
+                        status=200)
             else:
                 return web.json_response(
-                    {'error': 'something went wrong'})
+                    {'error': 'something went wrong'},
+                    )
 
 
 async def get_hex(hex_id):
     async with aiohttp.ClientSession() as session:
         url = f'{BOARD_API_URL}/v0/get-hex?id={hex_id}'
         async with session.get(url) as resp:
-            return web.json_response(await resp.json())
+            return web.json_response(
+                    await resp.json(),
+                )
 
 
 async def basic_combat(attacker, defender):
