@@ -87,7 +87,7 @@ mysql --host={HOST} --port={PORT} --protocol=TCP --user={USER} risk --password={
 # Using the API 
 
 
-## `v0/board | GET
+## `v0/board` | GET
 
 
 Load the board state for a given board id
@@ -95,6 +95,25 @@ Load the board state for a given board id
 
 ``` http
     /v0/board?id=1
+```
+
+### Response 
+
+```json
+    {
+        boardInfo: {
+            "description": "My Great Board!",
+            "created": "2020-07-25",
+            "columns": 3,
+            "rows": 3
+            },
+        players: {
+            }
+        tiles: [
+            {},
+            {}
+            ]
+    }
 ```
 
 ## `/v0/attack/` | PATCH
@@ -124,5 +143,3 @@ results in taking over a tile.
 **No Connection**: Trying to attack a destination tile that is not connected to
 the source tile will return a __no connection__ response and no attack is
 completed.
-
-
