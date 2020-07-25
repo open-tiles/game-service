@@ -136,6 +136,48 @@ Load the board state for a given board id
 
 ### Responses
 
+#### successful attack
+
+```json
+    {
+        "report": {
+            "success": "True",
+        },
+        "attackingTile": {
+            "id": 2,
+            "owner": 12,
+            "lostTokens": 2,
+        },
+        "attackedTile": {
+            "id": 3,
+            "owner": 12,
+            "lostTokens": 35,
+            "currenttokens": 20,
+        }
+    }
+```
+
+#### unsuccessful attack
+
+```json
+    {
+        "report": {
+            "success": "False",
+        }
+        "attackingTile": {
+            "id": 2,
+            "owner": 12,
+            "lostTokens": 20,
+        }
+        "attackedTile": {
+            "id": 3,
+            "currentOwner": 3,
+            "lostTokens": 10,
+            "currentTokens": 2,
+        }
+    }
+```
+
 **Attack Completed**: Attacks can be completed but not always be successful.
 Attacking with to few tokens results in a defeat. Attacking with enough tokens
 results in taking over a tile.
