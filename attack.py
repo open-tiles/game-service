@@ -19,33 +19,29 @@ async def hex_attack(request):
     attacker_id = data.get('attacker').get('hex-id')
     defender_id = data.get('defender').get('hex-id')
     attacker = await get_hex(attacker_id)
-    print(attacker.text)
     defender = await get_hex(defender_id)
     attacker = json.loads(attacker.text)
     defender = json.loads(defender.text)
-    connection = await check_connection(
-            attacker_id,
-            defender_id
-            )
+    connection = await check_connection(attacker_id, defender_id)
     connection = json.loads(connection.text)
     if connection.get('Connection'):
-        result = await basic_combat(attacker, defender)
-        if result < 1:
+        report = await basic_combat(attacker, defender)
+        if report['combatReport'].get('success'):
             await change_ownership(
                     attacker.get('player_id'),
                     defender.get('hex_id')
                     )
-            combat_result = await update_tokens(result, defender.get('hex_id'))
+            await update_tokens(1, defender.get('hex_id'))
             return web.json_response(
-                    json.loads(combat_result.text),
+                    report,
                     status=200
                     )
         else:
-            update_tokens(result, defender.get('hex_id'))
-        return web.json_response(
-                {'attacker': 'lost'},
-                status=200
-                )
+            update_tokens(1, defender.get('hex_id'))
+            return web.json_response(
+                    report,
+                    status=200
+                    )
     return web.json_response(
             {'Result': 'No connection'},
             status=200
@@ -91,7 +87,7 @@ async def update_tokens(tokens, hex_id):
         data = json.dumps(data)
         async with session.patch(url, data=data) as resp:
             if resp.status == 200:
-               return web.json_response(
+                return web.json_response(
                         {'winner': 'eeeeeee'},
                         status=200)
             else:
@@ -120,5 +116,4 @@ async def basic_combat(attacker, defender):
         url = f'{COMBAT_API_URL}/v0/basic-combat'
         async with session.post(url, data=data) as resp:
             data = await resp.json()
-            tokens = data.get('result')
-            return tokens
+            return data
