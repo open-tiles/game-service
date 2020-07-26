@@ -13,10 +13,10 @@ export COMBAT_API_URL?=http://localhost:6543
 
 
 ip:
-	@echo "game-service: " ${GAME_IP}
 	@echo "board-api: " ${BOARD_IP}
 	@echo "player-api: " ${PLAYER_IP}
 	@echo "combat-api: " ${COMBAT_IP}
+	@echo "game-service: " ${GAME_IP}
 
 up:
 	docker-compose pull
