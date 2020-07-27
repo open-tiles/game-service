@@ -24,28 +24,28 @@ async def hex_attack(request):
     defender = json.loads(defender.text)
     connection = await check_connection(attacker_id, defender_id)
     connection = json.loads(connection.text)
-    if connection.get('Connection'):
-        report = await basic_combat(attacker, defender)
-        if report['combatReport'].get('success'):
-            await change_ownership(
-                    attacker.get('player_id'),
-                    defender.get('hex_id')
-                    )
-            await update_tokens(1, defender.get('hex_id'))
-            return web.json_response(
-                    report,
-                    status=200
-                    )
-        else:
-            update_tokens(1, defender.get('hex_id'))
-            return web.json_response(
-                    report,
-                    status=200
-                    )
-    return web.json_response(
-            {'Result': 'No connection'},
-            status=200
-            )
+    if connection.get('Connection') is False:
+        return web.json_response(
+                connection,
+                status=200
+                )
+    report = await basic_combat(attacker, defender)
+    if report['combatReport'].get('success'):
+        await change_ownership(
+                attacker.get('player_id'),
+                defender.get('hex_id')
+                )
+        await update_tokens(1, defender.get('hex_id'))
+        return web.json_response(
+                report,
+                status=200
+                )
+    else:
+        update_tokens(1, defender.get('hex_id'))
+        return web.json_response(
+                report,
+                status=200
+                )
 
 
 async def check_connection(from_id, to_id):
