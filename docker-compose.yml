@@ -53,6 +53,6 @@ services:
 
     combat-api:
         container_name: combat-api-tiles
-        image: adam64/open-tiles_combat-api:develop
+        image: adam64/open-tiles_combat-api:latest
         ports:
             - 6543:8080
