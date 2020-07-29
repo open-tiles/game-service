@@ -31,29 +31,36 @@ async def hex_attack(request):
                 status=200
                 )
 
-    a = {
+    attacker = {
             "hex_id": attacker_id,
             "player_id": attacker.get('player_id'),
             "tokens": attacker.get('tokens')
             }
-    b = {
+    defender = {
             "hex_id": defender_id,
             "player_id": defender.get('player_id'),
             "tokens": defender.get('tokens')
             }
-    report = await basic_combat(a, b)
+    report = await basic_combat(attacker, defender)
     if report['combatReport'].get('success'):
         await change_ownership(
                 attacker.get('player_id'),
                 defender.get('hex_id')
                 )
-        await update_tokens(1, defender.get('hex_id'))
+        await update_tokens(
+                report['attackingTIle'].get('currentTokens'),
+                report['defendingTile'].get('id')
+                )
         return web.json_response(
                 report,
                 status=200
                 )
     else:
-        update_tokens(1, defender.get('hex_id'))
+        await update_tokens(
+                report['defendingTile'].get('currentTokens'),
+                report['defendingTile'].get('id')
+                )
+        await update_tokens(0, report['attackingTIle'].get('id'))
         return web.json_response(
                 report,
                 status=200
