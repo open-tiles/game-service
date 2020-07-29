@@ -16,8 +16,9 @@ async def test_handler(request):
 
 async def hex_attack(request):
     data = await request.json()
-    attacker_id = data.get('attacker').get('hex-id')
-    defender_id = data.get('defender').get('hex-id')
+    attacker_id = data.get('attacker').get('hex_id')
+    defender_id = data.get('defender').get('hex_id')
+
     attacker = await get_hex(attacker_id)
     defender = await get_hex(defender_id)
     attacker = json.loads(attacker.text)
@@ -29,7 +30,18 @@ async def hex_attack(request):
                 connection,
                 status=200
                 )
-    report = await basic_combat(attacker, defender)
+
+    a = {
+            "hex_id": attacker_id,
+            "player_id": attacker.get('player_id'),
+            "tokens": attacker.get('tokens')
+            }
+    b = {
+            "hex_id": defender_id,
+            "player_id": defender.get('player_id'),
+            "tokens": defender.get('tokens')
+            }
+    report = await basic_combat(a, b)
     if report['combatReport'].get('success'):
         await change_ownership(
                 attacker.get('player_id'),
