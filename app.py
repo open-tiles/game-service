@@ -53,6 +53,7 @@ app.add_routes([
         web.get('/v0/board', behaviour.load_board),
         web.get('/v0/check-connection', attacking.check_connection),
         web.patch('/v0/update-tokens', behaviour.update_tokens),
+        web.post("/v0/create-board", behaviour.create_board),
         ])
 
 if __name__ == "__main__":
