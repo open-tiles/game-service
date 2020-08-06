@@ -8,6 +8,22 @@ PLAYER_API_URL = os.environ.get('PLAYER_API_URL')
 
 headers = {"Access-Control-Allow-Origin": "*"}
 
+async def create_board(request):
+    data = await request.json()
+
+    data = {
+            "authCode": data.get("authCode"),
+            "playerID": data.get("playerID"),
+            "colour": data.get("colour"),
+            }
+
+    data = json.dumps(data)
+    url = f"{BOARD_API_URL}/v0/create"
+    async with aiohttp.ClientSession() as session:
+        async with session.post(url, data) as resp:
+            code = await resp.json()
+
+    return web.json_response({"gameCode": code})
 
 async def update_turn(next_player, board_id):
     url = f'{BOARD_API_URL}/v0/update-turn'
