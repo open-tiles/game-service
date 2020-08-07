@@ -15,7 +15,7 @@ async def create_board(request):
     data = {
             "authCode": data.get("authCode"),
             "playerID": data.get("playerID"),
-            "colour": data.get("colour"),
+            "playerColour": data.get("playerColour"),
             }
 
     data = json.dumps(data)
